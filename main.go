@@ -86,7 +86,7 @@ func main() {
 			}
 		}
 	}
-	writeToFile("nonblocking_deployments.txt", nonBlockingDeployments)
+	writeToFile("potential_downtime_deployments.txt", nonBlockingDeployments)
 	writeToFile("ha_deployments.txt", haDeployments)
 	writeToFile("blocking_deployments.txt", misconfiguredDeployments)
 }
