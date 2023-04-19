@@ -1,2 +1,0 @@
-argo-workflows-controller
-cluster-autoscaler-aws-cluster-autoscaler

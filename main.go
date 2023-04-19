@@ -36,9 +36,8 @@ func main() {
 	}
 
 	haDeployments := []string{}
-	noPdbDeployments := []string{}
 	misconfiguredDeployments := []string{}
-	goodDeployments := []string{}
+	nonBlockingDeployments := []string{}
 	for _, namespace := range namespaces.Items {
 		deployments, err := clientset.AppsV1().Deployments(namespace.Name).List(context.Background(), metav1.ListOptions{})
 		if err != nil {
@@ -49,7 +48,7 @@ func main() {
 			pdbName := deployment.Name
 			pdb, err := clientset.PolicyV1().PodDisruptionBudgets(namespace.Name).Get(context.Background(), pdbName, metav1.GetOptions{})
 			if err != nil {
-				noPdbDeployments = append(noPdbDeployments, deployment.Name)
+				nonBlockingDeployments = append(nonBlockingDeployments, deployment.Name)
 				continue
 			}
 			minAvailable := 0
@@ -72,11 +71,11 @@ func main() {
 				} else {
 					hpa, err := clientset.AutoscalingV1().HorizontalPodAutoscalers(namespace.Name).Get(context.Background(), deployment.Name, metav1.GetOptions{})
 					if err != nil {
-						goodDeployments = append(goodDeployments, deployment.Name)
+						nonBlockingDeployments = append(nonBlockingDeployments, deployment.Name)
 						continue
 					}
 					if hpa.Spec.MaxReplicas >= 2 {
-						goodDeployments = append(goodDeployments, deployment.Name)
+						nonBlockingDeployments = append(nonBlockingDeployments, deployment.Name)
 					} else {
 						misconfiguredDeployments = append(misconfiguredDeployments, deployment.Name)
 					}
@@ -87,9 +86,8 @@ func main() {
 			}
 		}
 	}
-	writeToFile("nonblocking_pdb_deployments.txt", goodDeployments)
+	writeToFile("nonblocking_deployments.txt", nonBlockingDeployments)
 	writeToFile("ha_deployments.txt", haDeployments)
-	writeToFile("no_pdb_deployments.txt", noPdbDeployments)
 	writeToFile("blocking_deployments.txt", misconfiguredDeployments)
 }
 

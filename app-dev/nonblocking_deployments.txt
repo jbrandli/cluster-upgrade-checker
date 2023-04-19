@@ -13,6 +13,7 @@ argo-events-eventbus-controller
 argo-events-eventsource-controller
 argo-events-sensor-controller
 argo-rollouts
+argo-workflows-controller
 mongodb-atlas-operator
 awspca-aws-privateca-issuer
 cis
@@ -58,6 +59,7 @@ aws-eks-istio-external-dns-z063667431ntqrj1u5dqa-vpbfd3
 aws-eks-istio-external-dns-z06903192ag12ssiia54y-oy1dbe
 aws-eks-istio-external-dns-z09174151urpc9yvlrksy-dw8w4d
 aws-load-balancer-controller
+cluster-autoscaler-aws-cluster-autoscaler
 coredns
 metrics-server-app-dev
 snapshot-controller
