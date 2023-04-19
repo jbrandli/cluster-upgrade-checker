@@ -65,22 +65,32 @@ func main() {
 			}
 
 			replicas := int(*deployment.Spec.Replicas)
-			if minAvailable <= 1 && maxUnavailable <= 1 {
+			if minAvailable <= 1 || maxUnavailable >= 1 {
 
 				if replicas >= 2 {
 					haDeployments = append(haDeployments, deployment.Name)
 				} else {
-					goodDeployments = append(goodDeployments, deployment.Name)
+					hpa, err := clientset.AutoscalingV1().HorizontalPodAutoscalers(namespace.Name).Get(context.Background(), deployment.Name, metav1.GetOptions{})
+					if err != nil {
+						goodDeployments = append(goodDeployments, deployment.Name)
+						continue
+					}
+					if hpa.Spec.MaxReplicas >= 2 {
+						goodDeployments = append(goodDeployments, deployment.Name)
+					} else {
+						misconfiguredDeployments = append(misconfiguredDeployments, deployment.Name)
+					}
+
 				}
 			} else {
 				misconfiguredDeployments = append(misconfiguredDeployments, deployment.Name)
 			}
 		}
 	}
-	writeToFile("good_deployments.txt", goodDeployments)
+	writeToFile("nonblocking_pdb_deployments.txt", goodDeployments)
 	writeToFile("ha_deployments.txt", haDeployments)
 	writeToFile("no_pdb_deployments.txt", noPdbDeployments)
-	writeToFile("misconfigured_deployments.txt", misconfiguredDeployments)
+	writeToFile("blocking_deployments.txt", misconfiguredDeployments)
 }
 
 // Function write lists of deployments to a file
