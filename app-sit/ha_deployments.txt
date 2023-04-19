@@ -1,0 +1,12 @@
+calico-typha
+fdr-sit-fdr-service-aggregation
+fdr-sit-fdr-service-document
+fdr-sit-fdr-service-draw
+fdr-sit-fdr-service-job
+fdr-sit-fdr-service-receipt
+fdr-sit-fdr-service-reference
+fdr-sit-fdr-service-voucher
+fdr-sit-fdr-ui
+fdr-sit-mesmd-feature-flag
+istiod
+ebs-csi-controller
